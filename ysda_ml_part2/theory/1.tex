@@ -1,0 +1,185 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage[english,russian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[left=1.5cm,right=1.5cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\usetikzlibrary{matrix,chains,positioning,decorations.pathreplacing,arrows}
+
+\begin{document}
+    \textbf {Задача 1.}
+
+    \begin{tikzpicture}[
+        plain/.style={
+          draw=none,
+          fill=none,
+          },
+        net/.style={
+          matrix of nodes,
+          nodes={
+            draw,
+            circle,
+            inner sep=10pt
+            },
+          nodes in empty cells,
+          column sep=2cm,
+          row sep=-9pt
+          },
+        >=latex
+        ]
+
+        \matrix[net] (mat)
+        {
+        |[plain]| \parbox{1.3cm}{\centering Input\\layer} & |[plain]| \parbox{1.3cm}{\centering Hidden\\layer} & |[plain]| \parbox{1.3cm}{\centering Output\\layer} \\
+         & |[plain]| & |[plain]| \\
+        |[plain]| & $h_1$ & |[plain]| \\
+         & |[plain]| & \\
+        |[plain]| & $h_2$ & |[plain]| \\
+         & |[plain]| & |[plain]| \\
+        };
+
+        \foreach \ai [count=\mi ]in {2,4,6}
+            \draw[<-] (mat-\ai-1) -- node[above] {$x_\mi$} +(-2cm,0);
+
+        \foreach \ai in {2,6}
+            \draw[->] (mat-\ai-1) -- (mat-3-2);
+
+        \foreach \ai in {2,4,6}
+            \draw[->] (mat-\ai-1) -- (mat-5-2);
+
+        \foreach \ai in {3,5}
+            \draw[->] (mat-\ai-2) -- (mat-4-3);
+        \draw[->] (mat-4-3) -- node[above] {$f$} +(2cm,0);
+    \end{tikzpicture}
+
+    \begin{matrix}
+        $x_1$ & $x_2$ & $x_3$ & $\overline x_1 \vee x_3$ & $x_3-x_1$ & $x_1 \vee x_2 \vee x_3$ & $x_1 + x_2 + x_3$ \\
+        0 & 0 & 0 & 1 & 0  & 0 & 0 \\
+        0 & 0 & 1 & 1 & 1  & 1 & 1 \\
+        0 & 1 & 0 & 1 & 0  & 1 & 1 \\
+        0 & 1 & 1 & 1 & 1  & 1 & 2 \\
+        1 & 0 & 0 & 0 & -1 & 1 & 1 \\
+        1 & 0 & 1 & 1 & 0  & 1 & 2 \\
+        1 & 1 & 0 & 0 & -1 & 1 & 2 \\
+        1 & 1 & 1 & 1 & 0  & 1 & 3 \\
+    \end{matrix}
+
+    Таким образом, $h_1$ можно представить как $[x_3-x_1+\frac{1}{2}>0]$, а $h_2$ - как $[x_1+x_2+x_3-\frac{1}{2}>0]$
+
+    \begin{matrix}
+        $h_1$ & $h_2$ & $h_1\& h_2$ & $h_1+h_2$ \\
+        0 & 0 & 0 & 0 \\
+        0 & 1 & 0 & 1 \\
+        1 & 0 & 0 & 1 \\
+        1 & 1 & 1 & 2 \\
+    \end{matrix}
+
+    Таким образом, $f$ можно представить как $[h_1+h_2-\frac{3}{2}>0]$
+
+    \textbf {Задача 2.}
+
+    $L=-\sum_{j=1}^{m}y_{j}\log{p_j}=-\sum_{j=1}^{m}y_{j}\log{\frac{e^{a_j}}{\sum_{k=1}^{m}e^{a_k}}}=$
+
+    $=-\sum_{j=1}^{m}y_{j}(\log{e^{a_j}}-\log{\sum_{k=1}^{m}e^{a_k}})=-\sum_{j=1}^{m}y_j(a_j-\log{\sum_{k=1}^{m}e^{a_k}})=$
+
+    $=-\sum_{j=1}^{m}y_{j}a_{j}+\sum_{j=1}^{m}y_{j}\log{\sum_{k=1}^{m}e^{a_k}}=\log(\sum_{k=1}^{m}e^{a_k})\sum_{j=1}^{m}y_{j}-\sum_{j=1}^{m}y_{j}a_{j}=$
+
+    $=\log{\sum_{k=1}^{m}e^{a_k}}-\sum_{j=1}^{m}y_{j}a_{j}$
+
+    $W=W-\eta L_{W}'$
+
+    $W'=W'-\eta L_{W'}'$
+
+    $\frac{\partial L}{\partial W_{jk}'}=\sum_{i=1}^{m}\frac{\partial L}{\partial a_i}\cdot\frac{\partial a_i}{\partial W_{jk}'}=$
+    $\sum_{i=1}^{m}\left(\frac{e^{a_i}}{\sum_{k=1}^{m}e^{a_k}}-y_{i}\right)\delta_{ik}h_{j}=$
+    $\sum_{i=1}^{m}(p_i-y_i)\delta_{ik}h_{j}=$
+    $(p_k-y_k)h_{j}$
+
+    $\frac{\partial L}{\partial W_{jk}}=\sum_{i=1}^{d}\frac{\partial L}{\partial h_i}\cdot\frac{\partial h_i}{\partial W_{jk}}=$
+    $\sum_{i=1}^{d}\left(\sum_{l=1}^{m}\frac{\partial L}{\partial a_l}\cdot\frac{\partial a_l}{\partial h_i}\right)\delta_{ik}x_{j}=$
+    $\sum_{i=1}^{d}\left(\sum_{l=1}^{m}(p_l-y_l)W_{il}'\right)\delta_{ik}x_{j}=$
+    $\sum_{l=1}^{m}(p_l-y_l)W_{kl}'x_{j}$
+
+    $W_{jk}=W_{jk}-\eta\sum_{l=1}^{m}(p_l-y_l)W_{kl}'x_{j}$
+
+    $W_{jk}'=W_{jk}'-\eta(p_k-y_k)h_{j}$
+
+    \textbf {Задача 4.}
+
+    $\sum_{i=1}^{\ell}\tilde w_i^{(n+1)}[b_n(x_i) \neq y_i]=\frac{1}{2}$
+
+    $\tilde w_i^{(n+1)}=\frac{\tilde w_i^{n}e^{-\alpha_{n}b_{n}y_{i}}}{w_0}$
+
+    $\sum_{i=1}^{\ell}\tilde w_i^{(n+1)}[b_n(x_i) \neq y_i]=$
+    $\frac{1}{w_0}\sum_{i=1}^{\ell}\tilde w_i^{n}e^{-\alpha_{n}b_{n}y_{i}}[b_n(x_i)\neq y_i]=$
+
+    $\frac{1}{w_0}\sum_{i=1}^{\ell}\tilde w_i^{n}e^{\alpha_n}[b_n(x_i)\neq y_i]=$
+
+    $\alpha_n=\frac{1}{2}\ln{\frac{P}{N}}$, где
+    $P=\sum_{i=1}^{\ell}\tilde w_i^{n}[b_n(x_i)=y_i]$,
+    $N=\sum_{i=1}^{\ell}\tilde w_i^{n}[b_n(x_i)\neq y_i]$
+
+    $=\frac{1}{w_0}\sum_{i=1}^{\ell}\tilde w_i^{n}\sqrt{\frac{P}{N}}[b_n(x_i)\neq y_i]=$
+    $\frac{1}{w_0}\sqrt{\frac{P}{N}}\sum_{i=1}^{\ell}\tilde w_i^{n}[b_n(x_i)\neq y_i]=$
+    $\frac{1}{w_0}\sqrt{\frac{P}{N}}N=$
+    $\frac{\sqrt{PN}}{w_0}$
+
+    $w_{0}=\sum_{i=1}^{\ell}\tilde w_i^{n}e^{-\alpha_{n}b_{n}y_{i}}=$
+    $\sum_{i=1}^{\ell}\tilde w_i^{n}e^{-\alpha_{n}}[b_n(x_i)=y_i]+\sum_{i=1}^{\ell}\tilde w_i^{n}e^{\alpha_n}[b_n(x_i)\neq y_i]$
+    $=\sqrt{\frac{N}{P}}P+\sqrt{\frac{P}{N}}N=2\sqrt{NP}$
+
+    $\sum_{i=1}^{\ell}\tilde w_i^{(n+1)}[b_n(x_i) \neq y_i]=\frac{\sqrt{PN}}{2\sqrt{PN}}=\frac{1}{2}$
+
+    \textbf {Задача 5.}
+
+    1. Градиентный бустинг на каждой итерации настраивается на антиградиент, поэтому:
+
+    $-L'=y-\tilde y$
+
+    $L'=\tilde y-y$
+
+    $L=\frac{(\tilde y-y)^2}{2}+C$
+
+    2. $L=(\tilde y-y)^4$
+
+    $-L'=-4(\tilde y-y)^3$, $y=(6,8,6,4,1)$, $\tilde y=(5,10,6,3,0)$
+
+    $-L'=-4(-1,2,0,-1,-1)^{3}=-4(-1,8,0,-1,-1)=(4,-32,0,4,4)$
+
+    3. $L=-(y\log{z}+(1-y)\log(1-z))$
+
+    $-L'=-\frac{y}{z}+\frac{1-y}{1-z}$
+
+    $b_{n}=\underset{b}{\mathrm{argmin}}\sum_{i=1}^{\ell}(b(x_i)+L'(F_{n-1}(x_i), y_i))^{2}=$
+    $\underset{b}{\mathrm{argmin}}\sum_{i=1}^{\ell}(b(x_i)+\frac{y_i}{F_{n-1}(x_i)}-\frac{1-y_i}{1-F_{n-1}(x_i)})^2$
+
+    $\gamma_{n}=\underset{\gamma}{\mathrm{argmin}}\sum_{i=1}^{\ell}L(F_{n-1}(x_i)+\gamma b_n(x_i), y_i)=$
+
+    $=\underset{\gamma}{\mathrm{argmin}}\sum_{i=1}^{\ell}(-y_i\log(F_{n-1}(x_i)+\gamma b_n(x_i))-(1-y_i)\log(1-F_{n-1(x_i)}-\gamma b_n(x_i)))$
+
+    \textbf {Задача 6.}
+
+    1. $L(M)=e^{-M}$
+
+    $w_i = -L'(M_i)=-e^{-M_i}$
+
+    Возьмем большое отрицательное значение $M_{\text{noise}}$, тогда $\lim_{M_{\text{noise}}\to-\infty}e^{-M_{\text{noise}}}=\infty$
+
+    Возьмем близкое к 0 пороговое значение $M_{\text{threshold}}$, тогда $\lim_{M_{\text{threshold}}\to 0}e^{-M_{\text{threshold}}}=1$
+
+    То есть $\forall C>0 \exists M_{\text{noise}} \frac{w_{\text{nosie}}}{w_{\text{threshold}}}>C$
+
+    2. $L(M)=\log(1+e^{-M})$
+
+    $w_{i}=-L'(M_i)=\frac{e^{-M_i}}{1+e^{-M_i}}$
+
+    $\lim_{M_{\text{noise}}\to-\infty}\frac{e^{-M_{\text{noise}}}}{1+e^{-M_{\text{noise}}}}=1$
+
+    $\lim_{M_{\text{threshold}}\to 0}\frac{e^{-M_{\text{threshold}}}}{1+e^{-M_{\text{threshold}}}}=\frac{1}{2}$
+
+    Видно, что во втором случае веса будут лежать в между $\frac{1}{2}$ и $1$, и бустинг будет устойчив к шуму
+\end{document}

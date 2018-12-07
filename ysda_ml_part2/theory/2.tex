@@ -1,0 +1,84 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage[english,russian]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[left=1.5cm,right=1.5cm,top=2cm,bottom=2cm,bindingoffset=0cm]{geometry}
+\usepackage{tikz}
+\usepackage{pgfplots}
+
+\usetikzlibrary{matrix,chains,positioning,decorations.pathreplacing,arrows}
+
+\begin{document}
+    \textbf {Задача 1.}
+
+    $E_{x,y}[(y-\mu(x))^2]=E_{x,y}[(y-\mu(x)+E(y|x)-E(y|x))]=E_{x,y}[((y-E(y|x))+(E(y|x)-\mu(x)))^2]=$
+
+    $=E_{x,y}[(y-E(y|x))^2]+E_{x,y}[(E(y|x)-\mu(x))^2]+2E_{x,y}[(y-E(y|x))(E(y|x)-\mu(x))]$
+
+    $E_{x,y}[(y-E(y|x))(E(y|x)-\mu(x))]=\int_{X}\int_{Y}(y-E(y|x))(E(y|x)-\mu(x))p(x,y)dxdy=$
+
+    $=\int_{X}(E(y|x)-\mu(x))\left[\int_{Y}(y-E(y|x))p(x,y)dy\right]dx$
+
+    $\int_{Y}(y-E(y|x))p(x,y)dy=\int_{Y}yp(y|x)p(x)dy-\int_{Y}E(y|x)p(x,y)dy=p(x)\int_{Y}yp(y|x)dy-E(y|x)\int_{Y}p(x,y)dy=$
+
+    $=p(x)E(y|x)-E(y|x)p(x)=0$, \Rightarrow $E_{x,y}[(y-\mu(x))^2]=E_{x,y}[(y-E(y|x))^2]+E_{x,y}[(E(y|x)-\mu(x))^2]$
+
+    $L(\mu)=E_{X^\ell,y^\ell}[E_{x,y}(y-E(y|x))^2]+E_{X^\ell,y^\ell}[E_{x,y}(E(y|x)-\mu(x))^2]$,
+    где первое слагаемое - шумовая компонента, которая не зависит от $X^\ell$, перепишем:
+
+    $L(\mu)=E_{x,y}(y-E(y|x))^2+E_{X^\ell,y^\ell}[E_{x,y}(E(y|x)-\mu(x))^2]$
+
+    $E_{X^\ell,y^\ell}[E_{x,y}(E(y|x)-\mu(x))^2]=E_{X^\ell,y^\ell}[E_{x,y}(E(y|x)-\mu(x)+E_{X^\ell,y^\ell}(\mu(x))-E_{X^\ell,y^\ell}(\mu(x)))^2]=$
+
+    $=E_{x,y}[E_{X^\ell,y^\ell}((E(y|x)-E_{X^\ell,y^\ell}(\mu(x)))+(E_{X^\ell,y^\ell}(\mu(x))-\mu(x)))^2]=$
+
+    $=E_{x,y}[E_{X^\ell,y^\ell}(E(y|x)-E_{X^\ell,y^\ell}(\mu(x)))^2]+E_{x,y}[E_{X^\ell,y^\ell}(E_{X^\ell,y^\ell}(\mu(x))-\mu(x))^2]+$
+
+    $+2E_{x,y}[E_{X^\ell,y^\ell}(E(y|x)-E_{X^\ell,y^\ell}(\mu(x)))(E_{X^\ell,y^\ell}(\mu(x))-\mu(x))]$,
+
+    первое слагаемое можем перписать как $E_{x,y}(E(y|x)-E_{X^\ell,y^\ell}(\mu(x)))^2$
+
+    Рассмотрим последнее слагаемое:
+    $E_{x,y}[E_{X^\ell,y^\ell}(E(y|x)-E_{X^\ell,y^\ell}(\mu(x)))(E_{X^\ell,y^\ell}(\mu(x))-\mu(x))]=$
+
+    $=E_{x,y}[(E(y|x)-E_{X^\ell,y^\ell}(\mu(x)))E_{X^\ell,y^\ell}(E_{X^\ell,y^\ell}(\mu(x))-\mu(x))]=$
+
+    $=[E_{X^\ell,y^\ell}(E_{X^\ell,y^\ell}(\mu(x))-\mu(x))=E_{X^\ell,y^\ell}(\mu(x))-E_{X^\ell,y^\ell}(\mu(x))=0]=0$
+
+    \Rightarrow $E_{X^\ell,y^\ell}[E_{x,y}(E(y|x)-\mu(x))^2]=E_{x,y}(E(y|x)-E_{X^\ell,y^\ell}(\mu(x)))^2+E_{x,y}[E_{X^\ell,y^\ell}(E_{X^\ell,y^\ell}(\mu(x))-\mu(x))^2]$
+
+    \Rightarrow $L(\mu)=E_{X^\ell,y^\ell}[E_{x,y}[(y-\mu(x))^2]]=E_{x,y}(y-E(y|x))^2+E_{x,y}(E(y|x)-E_{X^\ell,y^\ell}(\mu(x)))^2+$
+
+    $+E_{x,y}[E_{X^\ell,y^\ell}(E_{X^\ell,y^\ell}(\mu(x))-\mu(x))^2]$
+
+    \textbf{Задача 5.}
+
+    Нам необходимо уменьшить сложность вычисления последнего слагаемого.
+
+    Заметим, что $\langle\sum_{i=1}^{d}x_{i}v_{i},\sum_{i=1}^{d}x_{i}v_{i}\rangle=\sum_{i=1}^{d}\sum_{j=i+1}^{d}x_{i}x_{j}\langle v_{i},v_{j}\rangle+\sum_{i=1}^{d}x_{i}^{2}\langle v_{i},v_{i}\rangle+\sum_{i=1}^{d}\sum_{j=1}^{i-1}x_{i}x_{j}\langle v_{i},v_{j}\rangle$,
+
+    Заметим также, что $\sum_{i=1}^{d}\sum_{j=i+1}^{d}x_{i}x_{j}\langle v_{i},v_{j}\rangle=\sum_{i=1}^{d}\sum_{j=1}^{i-1}x_{i}x_{j}\langle v_{i},v_{j}\rangle$, тогда:
+
+    $\langle\sum_{i=1}^{d}x_{i}v_{i},\sum_{i=1}^{d}x_{i}v_{i}\rangle=2\sum_{i=1}^{d}\sum_{j=i+1}^{d}x_{i}x_{j}\langle v_{i},v_{j}\rangle+\sum_{i=1}^{d}x_{i}^{2}\langle v_{i},v_{i}\rangle$
+
+    Тогда $\sum_{i=1}^{d}\sum_{j=i+1}^{d}x_{i}x_{j}\langle v_{i},v_{j}\rangle=\frac{1}{2}(\langle\sum_{i=1}^{d}x_{i}v_{i},\sum_{i=1}^{d}x_{i}v_{i}\rangle-\sum_{i=1}^{d}x_{i}^{2}\langle v_{i},v_{i}\rangle)$
+
+    Оба члена получившейся разности считаются линейно, подставив в исходную сумму, также получим линейную сложность.
+
+    \textbf{Задача 6.}
+
+    У метода Дениса основное преимущество - дешевизна.
+    Этим методом можно пользоваться, не имея дорогих серверов и большого количества уже пользующихся сервисом пользователей.
+    По сути, для работы этого метода достаточно иметь собственно алгоритм, который будет предсказывать и достаточное количество данных, чтобы сделать какие-то выводы.
+    С другой стороны, нельзя точно гарантировать что алгоритм работает хорошо, если он хорошо себя показал на тестовых данных.
+    Возможно, тестовые данные слишком старые и не показывают реальных потребностей пользователей в данный момент, возможно, то, что было модным пару месяцев назад, когда были собраны данные, больше никто не покупает.
+
+    Наоборот, метод Андрея очень дорогой, для него понадобится продолжительное время работающий магазин с большой клиентской базой,
+    но при этом с его помощью можно оценить, как действительно работает алгоритм "в бою".
+
+    Мне кажется, что нужно использовать оба метода - сначала использовать метод Дениса, чтобы получить какую-то работающую рекомендательную систему,
+    затем, когда наберется достаточно клиентов, начать проводить AB-тестирование и fine-tune'ить рекомендательную систему.
+
+\end{document}
